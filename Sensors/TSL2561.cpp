@@ -16,7 +16,7 @@ void TSL2561::start() {
 uint16_t TSL2561::getRawLux(void) {
 
 }
-uint16_t TSL2561::getRawIR(void) {
+uint8_t * TSL2561::getRawIR(void) {
 	memset(rxBuf, 0, sizeof(rxBuf));
 	memset(txBuf, 0, sizeof(txBuf));
 	txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_CHAN1_LOW;
@@ -25,7 +25,8 @@ uint16_t TSL2561::getRawIR(void) {
 		xprintf("Init I2C and all slaves ...\n\n");
 		return false;
 	} else {
-		return misc.shifted(rxBuf);
+		//return misc.shifted(rxBuf);
+		return rxBuf;
 	}
 
 }

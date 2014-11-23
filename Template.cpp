@@ -184,8 +184,8 @@ public:
 //				init();
 //			} else {
 				TSL2561 tsl2561;
-				uint16_t result = tsl2561.getRawIR();
-				xprintf("TSL2561 Low: %d", result);
+				//uint8_t *result = tsl2561.getRawIR();
+				xprintf("TSL2561 Low: %d High:%d", tsl2561.getRawIR()[0], tsl2561.getRawIR()[1]);
 //			}
 #endif
 

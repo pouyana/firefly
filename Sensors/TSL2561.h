@@ -117,7 +117,7 @@ private:
 public:
 	void start(void);
 	uint16_t getRawLux(void);
-	uint16_t getRawIR(void);
+	uint8_t * getRawIR(void);
 	double getHuLux(void);
 	double getHuIR(void);
 	double getData(void);
