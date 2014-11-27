@@ -24,62 +24,9 @@ static Application APP_I2CTest("APP_I2CTest", 2000);
 #define TSL2561_TEST		1
 #define TMP006_TEST 		0
 
-
 #define LSM303DLH_ACC_ADDR  0x18
 #define LSM303DLH_MAG_ADDR  0x1D
 #define L3G4200D_GYR_ADDR   0x68
-#define TSL2561_ADDR 0x39
-#define TMP006_ADDR 0x40
-
-/*************TSL2561**************/
-#define TSL2561_COMMAND_BIT 0x80
-#define TSL2561_CLEAR_BIT 0x40
-#define TSL2561_WORD_BIT 0x20
-#define TSL2561_BLOCK_BIT 0x10
-#define TSL2561_CONTROL_POWERON 0x03
-#define TSL2561_CONTROL_POWEROFF 0x00
-#define TSL2561_REGISTER_CHAN1_LOW 0x0E
-#define TSL2561_CONTROL_POWERON 0x03
-#define TSL2561_REGISTER_CONTROL 0x00
-
-/**************TMP006**************/
-#define TMP006_CONFIG 0x02
-#define TMP006_CFG_RESET 0x8000
-#define TMP006_CFG_MODEON 0x7000
-#define TMP006_CFG_1SAMPLE 0x0000
-#define TMP006_CFG_2SAMPLE 0x0200
-#define TMP006_CFG_4SAMPLE 0x0400
-#define TMP006_CFG_8SAMPLE 0x0600
-#define TMP006_CFG_16SAMPLE 0x0800
-#define TMP006_CFG_DRDYEN 0x0100
-#define TMP006_CFG_DRDY 0x0080
-#define TMP006_MANID 0xFE
-#define TMP006_DEVID 0xFF
-#define TMP006_VOBJ 0x0
-#define TMP006_TAMB 0x01
-
-/*************TMP0007*************/
-
-#define TMP007_VOBJ 0x00
-#define TMP007_TDIE 0x01
-#define TMP007_CONFIG 0x02
-#define TMP007_TOBJ 0x03
-#define TMP007_STATUS 0x04
-#define TMP007_STATMASK 0x05
-#define TMP007_CFG_RESET 0x8000
-#define TMP007_CFG_MODEON 0x1000
-#define TMP007_CFG_1SAMPLE 0x0000
-#define TMP007_CFG_2SAMPLE 0x0200
-#define TMP007_CFG_4SAMPLE 0x0400
-#define TMP007_CFG_8SAMPLE 0x0600
-#define TMP007_CFG_16SAMPLE 0x0800
-#define TMP007_CFG_ALERTEN 0x0100
-#define TMP007_CFG_ALERTF 0x0080
-#define TMP007_CFG_TRANSC 0x0040
-#define TMP007_STAT_ALERTEN 0x8000
-#define TMP007_STAT_CRTEN 0x4000
-#define TMP007_I2CADDR 0x40
-#define TMP007_DEVID 0x1F
 
 class I2CTest: public Thread {
 public:
@@ -122,6 +69,7 @@ public:
 #endif
 #if TSL2561_TEST
 		TSL2561 tsl2561;
+		tsl2561.initialize();
 		tsl2561.start();
 #endif
 #if TMP006_TEST
@@ -174,23 +122,18 @@ public:
 #endif
 
 #if TSL2561_TEST
-			// ILUM
-//			memset(rxBuf, 0, sizeof(rxBuf));
-//			memset(txBuf, 0, sizeof(txBuf));
-//			txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_CHAN1_LOW;
-//			err[0] = i2c1.writeRead(TSL2561_ADDR, txBuf, 1, rxBuf, 2);
-//			if (printError("TSL2561 ", err, 2) > 0) {
-//				xprintf("Init I2C and all slaves ...\n\n");
-//				init();
-//			} else {
-				TSL2561 tsl2561;
-				//uint8_t *result = tsl2561.getRawIR();
-				xprintf("TSL2561 Low: %d High:%d", tsl2561.getRawIR()[0], tsl2561.getRawIR()[1]);
-//			}
+			TSL2561 tsl2561;
+			uint8_t channel = 0;
+			uint8_t *result = tsl2561.getIRHighLow();
+			if (!result) {
+				init();
+			}
+			xprintf("TSL2561 Low:%d, High:%d", result[0], result[1]);
+			uint16_t limu = tsl2561.getLuminosity(channel);
+			xprintf("TSL2561 Luminosity:%d, ", limu);
 #endif
 
 #if TMP006_TEST
-			// IR
 			memset(rxBuf, 0, sizeof(rxBuf));
 			memset(txBuf, 0, sizeof(txBuf));
 			uint16_t mod;
@@ -198,17 +141,17 @@ public:
 			double objDie;
 			TMP007 tmp7;
 			mod = tmp7.getModel();
-			if(!mod){
+			if(!mod) {
 				init();
 			}
 			xprintf("TMP Model: %x", mod);
 			objT = tmp7.getObjTemp();
-			if(!objT){
+			if(!objT) {
 				init();
 			}
 			xprintf("TMP OBJ: %f", objT);
 			objDie = tmp7.getDieTemp();
-			if(!objDie){
+			if(!objDie) {
 				init();
 			}
 			xprintf("TMP DIE: %f", objDie);

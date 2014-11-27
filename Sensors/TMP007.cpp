@@ -41,7 +41,7 @@ uint16_t TMP007::getModel() {
 		xprintf("Init I2C and all slaves ...\n\n");
 		return false;
 	} else {
-		result = misc.shifted(rxBuf);
+		result = misc.leftShift(rxBuf);
 		return result;
 	}
 
@@ -52,7 +52,7 @@ uint16_t TMP007::getRawObjTemp() {
 	memset(txBuf, 0, sizeof(txBuf));
 	txBuf[0] = TMP007_TOBJ;
 	err[0] = i2c1.writeRead(TMP007_ADDR, txBuf, 1, rxBuf, 2);
-	result = misc.shifted(rxBuf);
+	result = misc.leftShift(rxBuf);
 	if (misc.printError("TMP006 ", err, 1) > 0) {
 		xprintf("Init I2C and all slaves ...\n\n");
 		return false;
@@ -64,7 +64,7 @@ uint16_t TMP007::getRawObjTemp() {
 uint16_t TMP007::getRawDieTemp() {
 	txBuf[0] = TMP007_TDIE;
 	err[0] = i2c1.writeRead(TMP007_ADDR, txBuf, 1, rxBuf, 2);
-	result = misc.shifted(rxBuf);
+	result = misc.leftShift(rxBuf);
 	if (misc.printError("TMP006 ", err, 1) > 0) {
 		xprintf("Init I2C and all slaves ...\n\n");
 		return false;

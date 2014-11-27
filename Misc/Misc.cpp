@@ -7,8 +7,13 @@
  *      Author: Pouyan Azari
  */
 
-uint16_t Misc::shifted(uint8_t *rxBuf) {
+uint16_t Misc::leftShift(uint8_t *rxBuf) {
 	uint16_t result = rxBuf[1] | (rxBuf[0] << 8);
+	return result;
+}
+
+uint16_t Misc::rightShift(uint8_t *rxBuf){
+	uint16_t result = rxBuf[0] | (rxBuf[1] << 8);
 	return result;
 }
 int32_t Misc::printError(const char* dev, int32_t *err, uint32_t size) {

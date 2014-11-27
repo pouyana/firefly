@@ -11,7 +11,8 @@
 
 class Misc {
 public:
-	uint16_t shifted(uint8_t *rxBuf);
+	uint16_t rightShift(uint8_t *rxBuf);
+	uint16_t leftShift(uint8_t *rxBuf);
 	int32_t printError(const char* dev, int32_t *err, uint32_t size);
 
 };

@@ -1,4 +1,5 @@
 #include "rodos.h"
+#include "hal/hal_i2c.h"
 #include "../Misc/Misc.h"
 
 extern HAL_I2C i2c1;
@@ -98,13 +99,18 @@ extern HAL_I2C i2c1;
 #define TSL2561_REGISTER_CHAN0_HIGH  0x0D
 #define TSL2561_REGISTER_CHAN1_LOW  0x0E
 #define TSL2561_REGISTER_CHAN1_HIGH  0x0F
+#define NANO_SECOND_MULTIPLIER  1000000
 
-#define TSL2561_INTEGRATIONTIME_13MS 0x00, // 13.7ms
-#define TSL2561_INTEGRATIONTIME_101MS 0x01, // 101ms
-#define TSL2561_INTEGRATIONTIME_402MS 0x02 // 402ms
+typedef enum {
+	TSL2561_GAIN_0X = 0x00, // No gain
+	TSL2561_GAIN_16X = 0x10, // 16x gain
+} tsl2561Gain_t;
 
-#define TSL2561_GAIN_0X 0x00 // No gain
-#define TSL2561_GAIN_16X  0x10 // 16x gain
+typedef enum {
+	TSL2561_INTEGRATIONTIME_13MS = 0x00, // 13.7ms
+	TSL2561_INTEGRATIONTIME_101MS = 0x01, // 101ms
+	TSL2561_INTEGRATIONTIME_402MS = 0x02 // 402ms
+} tsl2561IntegrationTime_t;
 
 class TSL2561 {
 private:
@@ -114,13 +120,21 @@ private:
 	int32_t err[1];
 	uint16_t result;
 	Misc misc;
+	bool isEnabled;
+	tsl2561IntegrationTime_t _integration;
+	tsl2561Gain_t _gain;
 public:
-	void start(void);
 	uint16_t getRawLux(void);
-	uint8_t * getRawIR(void);
-	double getHuLux(void);
-	double getHuIR(void);
-	double getData(void);
+	uint16_t getLuminosity(uint8_t channel);
+	uint32_t calculateLux(uint16_t ch0, uint16_t ch1);
+	void setGain(tsl2561Gain_t gain);
+	void setTiming(tsl2561IntegrationTime_t integration);
+	uint32_t getFullLuminosity(void);
+	uint8_t* getIRHighLow(void);
+	void start(void);
+	void stop(void);
+	void initialize(void);
+	double getRawIR(void);
 };
 
 #endif /* SENSORS_TSL2561_H_ */
