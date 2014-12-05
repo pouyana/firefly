@@ -76,6 +76,7 @@ void LSM9DS0G::init(void) {
 	txBuf[1] = 0x00;
 	if (i2c2.write(LSM9DS0G_ADDR, txBuf, 2) < 0)
 		i2c2.init();
+	calcgRes(G_SCALE_245DPS);
 
 }
 void LSM9DS0G::stop(void) {
@@ -96,6 +97,98 @@ uint8_t LSM9DS0G::getModel(void) {
 	return rxBuf[0];
 }
 
+/**
+ * read the bias of the gyro set on the board.
+ */
+uint8_t LSM9DS0G::readBias(void) {
+	memset(rxBuf, 0, sizeof(rxBuf));
+	memset(txBuf, 0, sizeof(txBuf));
+	txBuf[0] = CTRL_REG5_G;
+	err[0] = i2c2.writeRead(LSM9DS0G_ADDR, txBuf, 1, rxBuf, 1);
+	if (misc.printError("TSL2561 ", err, 1) > 0) {
+		xprintf("Init I2C and all slaves ...\n\n");
+		return false;
+	}
+	return rxBuf[0];
+}
+
+void LSM9DS0G::enableFifo(void) {
+	memset(rxBuf, 0, sizeof(rxBuf));
+	memset(txBuf, 0, sizeof(txBuf));
+	txBuf[0] = CTRL_REG5_G;
+	txBuf[1] = readBias() | 0x40;
+	err[0] = i2c2.write(LSM9DS0G_ADDR, txBuf, 2);
+	if (misc.printError("TSL2561 ", err, 1) > 0) {
+		xprintf("Init I2C and all slaves ...\n\n");
+		memset(rxBuf, 0, sizeof(rxBuf));
+	}
+}
+
+void LSM9DS0G::disableFifo(void) {
+	memset(rxBuf, 0, sizeof(rxBuf));
+	memset(txBuf, 0, sizeof(txBuf));
+	txBuf[0] = CTRL_REG5_G;
+	txBuf[1] = readBias() & ~0x40;
+	err[0] = i2c2.write(LSM9DS0G_ADDR, txBuf, 2);
+	if (misc.printError("TSL2561 ", err, 1) > 0) {
+		xprintf("Init I2C and all slaves ...\n\n");
+		memset(rxBuf, 0, sizeof(rxBuf));
+	}
+}
+
+void LSM9DS0G::enableByPassMode(void) {
+	memset(rxBuf, 0, sizeof(rxBuf));
+	memset(txBuf, 0, sizeof(txBuf));
+	txBuf[0] = FIFO_CTRL_REG_G;
+	txBuf[1] = 0x00;
+	err[0] = i2c2.write(LSM9DS0G_ADDR, txBuf, 2);
+	if (misc.printError("TSL2561 ", err, 1) > 0) {
+		xprintf("Init I2C and all slaves ...\n\n");
+		memset(rxBuf, 0, sizeof(rxBuf));
+	}
+}
+
+void LSM9DS0G::enableStreamMode(void) {
+	memset(rxBuf, 0, sizeof(rxBuf));
+	memset(txBuf, 0, sizeof(txBuf));
+	txBuf[0] = FIFO_CTRL_REG_G;
+	txBuf[1] = 0x20 | 0x1F;
+	err[0] = i2c2.write(LSM9DS0G_ADDR, txBuf, 2);
+	if (misc.printError("TSL2561 ", err, 1) > 0) {
+		xprintf("Init I2C and all slaves ...\n\n");
+		memset(rxBuf, 0, sizeof(rxBuf));
+	}
+}
+
+void LSM9DS0G::calcgRes(gyro_scale gScale) {
+// Possible gyro scales (and their register bit settings) are:
+// 245 DPS (00), 500 DPS (01), 2000 DPS (10). Here's a bit of an algorithm
+// to calculate DPS/(ADC tick) based on that 2-bit value:
+	switch (gScale) {
+	case G_SCALE_245DPS:
+		gRes = 245.0 / 32768.0;
+		break;
+	case G_SCALE_500DPS:
+		gRes = 500.0 / 32768.0;
+		break;
+	case G_SCALE_2000DPS:
+		gRes = 2000.0 / 32768.0;
+		break;
+	}
+}
+
+uint8_t LSM9DS0G::readNumberOfSamples(void) {
+	memset(rxBuf, 0, sizeof(rxBuf));
+	memset(txBuf, 0, sizeof(txBuf));
+	txBuf[0] = FIFO_SRC_REG_G;
+	err[0] = i2c2.writeRead(LSM9DS0G_ADDR, txBuf, 1, rxBuf, 1);
+	if (misc.printError("TSL2561 ", err, 1) > 0) {
+		xprintf("Init I2C and all slaves ...\n\n");
+		return false;
+	}
+	return rxBuf[0] & 0x1F;
+}
+
 void LSM9DS0G::read(void) {
 	memset(rxBuf, 0, sizeof(rxBuf));
 	memset(txBuf, 0, sizeof(txBuf));
@@ -106,6 +199,6 @@ void LSM9DS0G::read(void) {
 		memset(rxBuf, 0, sizeof(rxBuf));
 	}
 	gx = (rxBuf[1] << 8) | rxBuf[0];
-	gy = (rxBuf[3] << 8)| rxBuf[2];
-	gz = (rxBuf[5] << 8)| rxBuf[4];
+	gy = (rxBuf[3] << 8) | rxBuf[2];
+	gz = (rxBuf[5] << 8) | rxBuf[4];
 }

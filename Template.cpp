@@ -14,9 +14,11 @@
 #include "Misc/Misc.h"
 #include "Sensors/TMP007.h"
 #include "Sensors/TSL2561.h"
-#include "Sensors/LSM9DS0.h"
-#include "Sensors/LSM9DS0G.h"
+//#include "Sensors/LSM9DS0.h"
+//#include "Sensors/LSM9DS0G.h"
 #include "Template.h"
+#include "Threads/LSM9DS0GT.h"
+#include "Threads/DataCollector.h"
 
 static Application APP_I2CTest("APP_I2CTest", 2000);
 
@@ -46,12 +48,6 @@ public:
 		i2c3.init();
 		i2c2.init();
 
-#if L3G4200D_TEST
-		LSM9DS0 lsm9ds0;
-		lsm9ds0.init();
-		LSM9DS0G gyro;
-		gyro.init();
-#endif
 #if LSM303_ACC_TEST
 		txBuf[0] = 0x20; // address of CTRL_REG1_A
 		txBuf[1] = 0x27;// value of CTRL_REG1_A -> normal mode, x,y,z enable
@@ -84,31 +80,6 @@ public:
 		int32_t err[10] = { 0 };
 
 		while (1) {
-			/** check out L3G4200D (extern) **/
-#if L3G4200D_TEST
-//			txBuf[0] = 0x28 | 0x80; // start reading with x-low register, read multiple register
-//			err[0] = i2c2.writeRead(L3G4200D_GYR_ADDR, txBuf, 1, rxBuf, 6);
-			LSM9DS0G gyro;
-			uint8_t gyroModel = gyro.getModel();
-			if (gyroModel) {
-				xprintf("LSM9DS0G \"Who am I\" reg (0xD4):0x%x", gyroModel);
-			}
-			gyro.read();
-			xprintf("LSM9DS0G  x,y,z: %d, %d, %d\n", gyro.gx, gyro.gy, gyro.gz); // LSB first
-
-//			if (printError("L3G4200D GYRO", err, 1) > 0) {
-//				xprintf("%d",rxBuf[0]);
-//				xprintf("Init I2C and all slaves ...\n\n");
-//				init(); // init i2c1/i2c2 and all slaves
-//			} else {
-//				PRINTF("L3G4200D \"Who am I\" reg (0xD3):0x%x\n", rxBuf[0]);
-//				PRINTF("L3G4200D GYRO x,y,z: %d, %d, %d\n",rxBuf[0]|(rxBuf[1]<<8), rxBuf[2]|(rxBuf[3]<<8), rxBuf[4]|(rxBuf[5]<<8)); // LSB first
-//				xprintf("L3G4200D GYRO x,y,z: %d, %d, %d\n\n",
-//						rxBuf[1] | (rxBuf[0] << 8), rxBuf[3] | (rxBuf[2] << 8),
-//						rxBuf[5] | (rxBuf[4] << 8));				// MSB first
-//			}
-
-#endif
 
 			/** check out LSM303 (extern) **/
 #if LSM303_ACC_TEST
@@ -202,7 +173,8 @@ public:
 
 		return errCnt;
 	}
-}
-;
+};
 
 I2CTest i2cTest("I2CTest");
+LSM9DS0GT LSM9DS0GT("LSM9DS0GT");
+DataCollector DataCollector("DataCollector");

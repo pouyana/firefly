@@ -44,19 +44,33 @@ extern HAL_I2C i2c2;
 
 class LSM9DS0G {
 public:
+	enum gyro_scale {
+		G_SCALE_245DPS, // 00: 245 degrees per second
+		G_SCALE_500DPS, // 01: 500 dps
+		G_SCALE_2000DPS, // 10: 2000 dps
+	};
 	void init(void);
 	void stop(void);
-	uint8_t getModel(void);
+	void enableFifo(void);
+	void disableFifo(void);
 	void read(void);
+	void enableStreamMode(void);
+	void enableByPassMode(void);
+	void calcgRes(gyro_scale gScale);
+	uint8_t readNumberOfSamples(void);
+	uint8_t getModel(void);
+	uint8_t readBias(void);
+
+	float gRes;
 	uint16_t gx;
 	uint16_t gy;
 	uint16_t gz;
 private:
 	bool isOn;
 	uint8_t txBuf[3];
-	uint16_t txBuf16[3];
 	uint8_t rxBuf[6];
-	int32_t err[1];
+	uint16_t txBuf16[3];
+	int32_t err[2];
 	uint16_t result;
 	Misc misc;
 };
