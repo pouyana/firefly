@@ -14,19 +14,24 @@
 #include "Misc/Misc.h"
 #include "Sensors/TMP007.h"
 #include "Sensors/TSL2561.h"
+#include "Sensors/LSM9DS0.h"
+#include "Sensors/LSM9DS0G.h"
 #include "Template.h"
 
 static Application APP_I2CTest("APP_I2CTest", 2000);
 
-#define L3G4200D_TEST       0
+#define L3G4200D_TEST       1
 #define LSM303_ACC_TEST     0
 #define LSM303_MAG_TEST     0
-#define TSL2561_TEST		1
+#define TSL2561_TEST		0
 #define TMP006_TEST 		0
 
 #define LSM303DLH_ACC_ADDR  0x18
 #define LSM303DLH_MAG_ADDR  0x1D
-#define L3G4200D_GYR_ADDR   0x68
+#define L3G4200D_GYR_ADDR   0X6B
+
+HAL_GPIO gpio0(GPIO_018);
+HAL_GPIO gpio1(GPIO_055);
 
 class I2CTest: public Thread {
 public:
@@ -38,19 +43,14 @@ public:
 		uint8_t txBuf[3] = { 0 };
 		uint16_t txBuf16[2] = { 0 };
 		int32_t err[10] = { 0 };
-
-		i2c1.init();
+		i2c3.init();
+		i2c2.init();
 
 #if L3G4200D_TEST
-		txBuf[0] = 0x20; // address of CTRL_REG1
-		txBuf[1] = 0x0F;// value of CTRL_REG1 -> normal mode, x,y,z enable
-		if (i2c1.write(L3G4200D_GYR_ADDR, txBuf, 2) < 0)
-		i2c1.init();
-		txBuf[0] = 0x23;// address of CTRL_REG4_A
-		txBuf[1] = 0x40;// value of CTRL_REG4_A -> MSB first
-		//txBuf[1] = 0x00; // value of CTRL_REG4_A -> LSB first
-		if (i2c1.write(L3G4200D_GYR_ADDR, txBuf, 2) < 0)
-		i2c1.init();
+		LSM9DS0 lsm9ds0;
+		lsm9ds0.init();
+		LSM9DS0G gyro;
+		gyro.init();
 #endif
 #if LSM303_ACC_TEST
 		txBuf[0] = 0x20; // address of CTRL_REG1_A
@@ -86,22 +86,27 @@ public:
 		while (1) {
 			/** check out L3G4200D (extern) **/
 #if L3G4200D_TEST
-			memset(rxBuf, 0, sizeof(rxBuf));
-			memset(txBuf, 0, sizeof(txBuf));
-			txBuf[0] = 0x28 | 0x80; // start reading with x-low register, read multiple register
-			err[0] = i2c1.writeRead(L3G4200D_GYR_ADDR, txBuf, 1, rxBuf, 6);
-			txBuf[0] = 0x0f;// WHO_AM_I Register
-			err[1] = i2c1.writeRead(L3G4200D_GYR_ADDR, txBuf, 1, &rxBuf[6], 1);
-			if (printError("L3G4200D GYRO", err, 2) > 0) {
-				xprintf("Init I2C and all slaves ...\n\n");
-				init(); // init i2c1/i2c2 and all slaves
-			} else {
-				PRINTF("L3G4200D \"Who am I\" reg (0xD3):0x%x\n", rxBuf[6]);
-				//PRINTF("L3G4200D GYRO x,y,z: %d, %d, %d\n",rxBuf[0]|(rxBuf[1]<<8), rxBuf[2]|(rxBuf[3]<<8), rxBuf[4]|(rxBuf[5]<<8)); // LSB first
-				xprintf("L3G4200D GYRO x,y,z: %d, %d, %d\n\n",
-						rxBuf[1] | (rxBuf[0] << 8), rxBuf[3] | (rxBuf[2] << 8),
-						rxBuf[5] | (rxBuf[4] << 8));// MSB first
+//			txBuf[0] = 0x28 | 0x80; // start reading with x-low register, read multiple register
+//			err[0] = i2c2.writeRead(L3G4200D_GYR_ADDR, txBuf, 1, rxBuf, 6);
+			LSM9DS0G gyro;
+			uint8_t gyroModel = gyro.getModel();
+			if (gyroModel) {
+				xprintf("LSM9DS0G \"Who am I\" reg (0xD4):0x%x", gyroModel);
 			}
+			gyro.read();
+			xprintf("LSM9DS0G  x,y,z: %d, %d, %d\n", gyro.gx, gyro.gy, gyro.gz); // LSB first
+
+//			if (printError("L3G4200D GYRO", err, 1) > 0) {
+//				xprintf("%d",rxBuf[0]);
+//				xprintf("Init I2C and all slaves ...\n\n");
+//				init(); // init i2c1/i2c2 and all slaves
+//			} else {
+//				PRINTF("L3G4200D \"Who am I\" reg (0xD3):0x%x\n", rxBuf[0]);
+//				PRINTF("L3G4200D GYRO x,y,z: %d, %d, %d\n",rxBuf[0]|(rxBuf[1]<<8), rxBuf[2]|(rxBuf[3]<<8), rxBuf[4]|(rxBuf[5]<<8)); // LSB first
+//				xprintf("L3G4200D GYRO x,y,z: %d, %d, %d\n\n",
+//						rxBuf[1] | (rxBuf[0] << 8), rxBuf[3] | (rxBuf[2] << 8),
+//						rxBuf[5] | (rxBuf[4] << 8));				// MSB first
+//			}
 
 #endif
 
@@ -197,6 +202,7 @@ public:
 
 		return errCnt;
 	}
-};
+}
+;
 
 I2CTest i2cTest("I2CTest");

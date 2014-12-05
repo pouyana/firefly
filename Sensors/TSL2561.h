@@ -2,7 +2,7 @@
 #include "hal/hal_i2c.h"
 #include "../Misc/Misc.h"
 
-extern HAL_I2C i2c1;
+extern HAL_I2C i2c3;
 /*
  * TSL2561.h
  *

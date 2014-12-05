@@ -10,8 +10,8 @@ void TSL2561::start() {
 	if (!isEnabled) {
 		txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_CONTROL;
 		txBuf[1] = TSL2561_CONTROL_POWERON;
-		if (i2c1.write(TSL2561_ADDR_FLOAT, txBuf, 2) < 0)
-			i2c1.init();
+		if (i2c3.write(TSL2561_ADDR_FLOAT, txBuf, 2) < 0)
+			i2c3.init();
 		isEnabled = true;
 	}
 }
@@ -20,8 +20,8 @@ void TSL2561::stop(void) {
 	if (isEnabled) {
 		txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_CONTROL;
 		txBuf[1] = TSL2561_CONTROL_POWEROFF;
-		if (i2c1.write(TSL2561_ADDR_FLOAT, txBuf, 2) < 0)
-			i2c1.init();
+		if (i2c3.write(TSL2561_ADDR_FLOAT, txBuf, 2) < 0)
+			i2c3.init();
 		isEnabled = false;
 	}
 }
@@ -130,8 +130,8 @@ void TSL2561::setGain(tsl2561Gain_t gain) {
 	_gain = gain;
 	txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_TIMING;
 	txBuf[1] = TSL2561_INTEGRATIONTIME_13MS | gain;
-	if (i2c1.write(TSL2561_ADDR_FLOAT, txBuf, 2) < 0)
-		i2c1.init();
+	if (i2c3.write(TSL2561_ADDR_FLOAT, txBuf, 2) < 0)
+		i2c3.init();
 	stop();
 }
 
@@ -144,8 +144,8 @@ void TSL2561::setTiming(tsl2561IntegrationTime_t integration) {
 	_integration = integration;
 	txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_TIMING;
 	txBuf[1] = integration | TSL2561_GAIN_16X;
-	if (i2c1.write(TSL2561_ADDR_FLOAT, txBuf, 2) < 0)
-		i2c1.init();
+	if (i2c3.write(TSL2561_ADDR_FLOAT, txBuf, 2) < 0)
+		i2c3.init();
 	stop();
 }
 
@@ -155,7 +155,7 @@ uint8_t* TSL2561::getIRHighLow(void) {
 	memset(rxBuf, 0, sizeof(rxBuf));
 	memset(txBuf, 0, sizeof(txBuf));
 	txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_CHAN1_LOW;
-	err[0] = i2c1.writeRead(TSL2561_ADDR_FLOAT, txBuf, 1, rxBuf, 2);
+	err[0] = i2c3.writeRead(TSL2561_ADDR_FLOAT, txBuf, 1, rxBuf, 2);
 	if (misc.printError("TSL2561 ", err, 1) > 0) {
 		xprintf("Init I2C and all slaves ...\n\n");
 		return 0;
@@ -175,13 +175,13 @@ uint32_t TSL2561::getFullLuminosity() {
 	uint32_t x;
 	uint16_t y;
 	txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_CHAN1_LOW;
-	err[0] = i2c1.writeRead(TSL2561_ADDR_FLOAT, txBuf, 1, rxBuf, 2);
+	err[0] = i2c3.writeRead(TSL2561_ADDR_FLOAT, txBuf, 1, rxBuf, 2);
 	x = rxBuf[1];
 	x <<= 8;
 	x |= rxBuf[0];
 	x <<= 16;
 	txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_REGISTER_CHAN0_LOW;
-	err[1] = i2c1.writeRead(TSL2561_ADDR_FLOAT, txBuf, 1, rxBuf, 2);
+	err[1] = i2c3.writeRead(TSL2561_ADDR_FLOAT, txBuf, 1, rxBuf, 2);
 	y = rxBuf[1];
 	y <<= 8;
 	y |= rxBuf[0];
