@@ -24,13 +24,11 @@ public:
 	LSM9DS0GT(const char* name);
 	void init();
 	void run();
-	void calibrate(float * bias);
 	LSM9DS0 lsm9ds0;
 	LSM9DS0G gyro;
 	float * gyroBias;
 private:
 	GyroPosition gyroPos;
-
 	uint8_t txBuf[3];
 	uint8_t rxBuf[6];
 };

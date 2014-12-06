@@ -76,7 +76,7 @@ void LSM9DS0G::init(void) {
 	txBuf[1] = 0x00;
 	if (i2c2.write(LSM9DS0G_ADDR, txBuf, 2) < 0)
 		i2c2.init();
-	calcgRes(G_SCALE_245DPS);
+	calcgRes(G_SCALE_2000DPS);
 
 }
 void LSM9DS0G::stop(void) {
