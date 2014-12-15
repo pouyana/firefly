@@ -11,18 +11,22 @@
 #define DATAPACKAGE_H_
 
 #include "rodos.h"
+#include "PackageType.h"
+#include <stdlib.h>
 
 class DataPackage {
 
-private:
+protected:
 	unsigned int byteSize;
 	uint8_t* rawData;
+	bool validRaw;
 
 	//actual data fields, common for all DataPackages
-	uint8_t sync;
+	PackageType sync;
 	uint8_t stop;
 
 	//static final constants for raw-data conversion
+
 
 	//RES = resolution, equals the least significant digit
 	//MIN = lower bound of valid range of values
@@ -58,157 +62,59 @@ private:
 	static const float VOLT_MAX = 12.0;
 	static const float VOLT_OFF = 12.0;
 
-	static uint16_t float2uint16(float value, float res, float offset);/* {
-		return (short) ((value+offset)/res);
-	};*/
+
+	static const unsigned int TC_PACKAGE_SIZE = 5;
+	static const unsigned int TM_PACKAGE_SIZE = 94;
+	static const unsigned int VIDEO_PACKAGE_SIZE = 0; //TODO
+
+	//byteFields
+	static const unsigned int POSITION_SYNC = 0;
+
+	//StopByte
+	static const uint8_t STOP_BYTE = (uint8_t) '#';
 
 
-	DataPackage(unsigned int size);
-	virtual ~DataPackage();
+	static uint16_t float2uint16(float value, float res, float offset) {
+		return (uint16_t) ((value+offset)/res);
+	};
+
+	static uint8_t highByte(uint16_t value) {
+		return (uint8_t) value >> 8;
+	}
+
+	static uint8_t lowByte(uint16_t value) {
+		return (uint8_t) (value && 0x00FF);
+	}
+
+	static uint16_t joinBytes(uint8_t high, uint8_t low) {
+		return (uint16_t) (high << 8) + low;
+	}
+
+	void encodeType(PackageType type);
+	PackageType decodeType();
+
+	virtual void encodeStop(uint8_t stop) = 0;
 
 public:
+
 
 	/**
 	 * abstract method which forms the rawData-field from the actual data fields
 	 */
 	virtual void build() = 0;
 
-	/**
-	 * abstract method which calculates the actual data fields from rawData
-	 */
-	//virtual DataPackage parse(uint8_t* rawData, unsigned int rawDataSize);
+	uint8_t* getRaw() = 0;
 
-};
 
-class TMPackage : DataPackage {
+//	DataPackage parse(uint8_t* rawData, unsigned int rawDataSize);
 
-private:
-	//actual data fields (still contain raw data only)
+	PackageType getType();
 
-	//sync inherited by DataPackage
-	uint8_t  mode;     //soft-ware-mode
-	uint8_t  echoCmd;  //echo of the last received TC-command word
-	uint16_t echoParam;//echo of the param of last received TC
-	uint16_t time;
-	uint16_t omegaX;   //angular velocity in x direction [deg/sec]
-	uint16_t omegaY;
-	uint16_t omegaZ;
-	uint16_t accX;	   //acceleration in x direction [multiples of g]
-	uint16_t accY;
-	uint16_t accZ;
-	uint16_t roll;     //roll angle [deg]
-	uint16_t pitch;    //pitch angle [deg]
-	uint16_t yaw;      //yaw angle [deg]
-	uint16_t quat1;    //first vector comp. of quaternion representation
-	uint16_t quat2;
-	uint16_t quat3;
-	uint16_t quat4;    //scalar comp. of quaternion
-	uint16_t vBat;     //battery voltage [V]
-	uint16_t vSolar1;  //1st solar panel voltage [V]
-	uint16_t vSolar2;  //2nd solar panel voltage [V]
-	uint8_t  dep;      //binary indicator for solar panel deployment
-	uint8_t  chrg;     //binary indicator for battery charging
-	uint16_t errorYaw; //control-error of yaw [deg]
-	uint16_t errorOmegaZ; //control-error of angular velocity in z direction
-	uint16_t thetaFire1; //yaw angle of fire #1
-	uint16_t thetaFire2;
-	uint16_t thetaFire3;
-	uint16_t thetaFire4;
-	uint16_t thetaFire5;
-	uint16_t timeFire1; //MET of the detection of fire #1
-	uint16_t timeFire2;
-	uint16_t timeFire3;
-	uint16_t timeFire4;
-	uint16_t timeFire5;
-	uint16_t thetaSun;  //yaw angle of the sun
-	//10 bytes for misc (not yet defined) purposes reserved
-	//stop-byte inherited by DataPackage
-
-public:
-	/*
-	 * creates an empty well formatted TM Package
-	 */
-	TMPackage();
-
-	~TMPackage();
-
-	/**
-	 * build a TMPackage out of raw data stream
-	 */
-	TMPackage(uint8_t* buffer, unsigned int bufferSize);
-
-	/**
-	 * build TMPackage based on actual values
-	 */
-	TMPackage(
-			uint8_t  mode,
-				uint8_t  echoCmd,
-				float echoParam,
-				uint16_t time,
-				float omegaX,
-				float omegaY,
-				float omegaZ,
-				float accX,
-				float accY,
-				float accZ,
-				float roll,
-				float pitch,
-				float yaw,
-				float quat1,
-				float quat2,
-				float quat3,
-				float quat4,
-				float vBat,
-				float vSolar1,
-				float vSolar2,
-				uint8_t dep,
-				uint8_t chrg,
-				float errorYaw,
-				float errorOmegaZ,
-				float thetaFire1,
-				float thetaFire2,
-				float thetaFire3,
-				float thetaFire4,
-				float thetaFire5,
-				float timeFire1,
-				float timeFire2,
-				float timeFire3,
-				float timeFire4,
-				float timeFire5,
-				float thetaSun
-		);
+	DataPackage(unsigned int size, PackageType type);
+	virtual ~DataPackage();
 
 
 };
-
-class TCPackage : DataPackage {
-
-private:
-	//data fields (containing raw data)
-	//sync inherited from DataPackage
-	uint8_t cmd;
-	uint16_t param;
-	//stop inherited from DataPackage
-
-public:
-	/*
-	 * creates an empty but well formatted TCPackage
-	 */
-	TCPackage();
-
-	~TCPackage();
-
-	/*
-	 * creates TC package from raw data
-	 */
-	TCPackage(uint8_t buffer, unsigned int bufferSize);
-
-	/*
-	 * creates TC package from values
-	 */
-	TCPackage(uint8_t cmd, float param);
-};
-
 
 
 

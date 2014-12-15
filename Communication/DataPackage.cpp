@@ -7,28 +7,38 @@
 
 #include "DataPackage.h"
 
-DataPackage::DataPackage(unsigned int size) {
+DataPackage::DataPackage(unsigned int size, PackageType type) {
 	byteSize = size;
-	this->rawData[size] = 0;
-	sync = 0;
+	this->rawData = (uint8_t*) malloc(size*sizeof(uint8_t));
+	sync = type;
 	stop = 0;
+	validRaw = false;
 };
+
+
 
 DataPackage::~DataPackage(){
 
 };
 
-//DataPackage::parse(uint8_t* rawData, unsigned int rawDataSize) {
-//
-//	//TODO check type and size to call corresponding child classes parser
-//	return 0;
-//}
+PackageType DataPackage::getType(){
+	return sync;
+}
 
-//DataPackage::bla(float value, float res, float offset) {
-//	return (short) ((value+offset)/res);
-//};
+void DataPackage::encodeType(PackageType enumPackageType) {
+	rawData[POSITION_SYNC] = (uint8_t) enumPackageType;
+}
 
-DataPackage::float2uint16(float value, float res, float offset) {
-		return (short) ((value+offset)/res);
-	};
+PackageType DataPackage::decodeType() {
+	return (PackageType) rawData[POSITION_SYNC];
+}
+
+uint8_t* DataPackage::getRaw() {
+	if (!validRaw) {
+		build();
+	}
+
+	return rawData;
+}
+
 
