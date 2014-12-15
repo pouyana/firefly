@@ -58,6 +58,10 @@ private:
 	static const float VOLT_MAX = 12.0;
 	static const float VOLT_OFF = 12.0;
 
+	static uint16_t float2uint16(float value, float res, float offset);/* {
+		return (short) ((value+offset)/res);
+	};*/
+
 
 	DataPackage(unsigned int size);
 	virtual ~DataPackage();

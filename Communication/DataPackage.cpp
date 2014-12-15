@@ -24,4 +24,11 @@ DataPackage::~DataPackage(){
 //	return 0;
 //}
 
+//DataPackage::bla(float value, float res, float offset) {
+//	return (short) ((value+offset)/res);
+//};
+
+DataPackage::float2uint16(float value, float res, float offset) {
+		return (short) ((value+offset)/res);
+	};
 
