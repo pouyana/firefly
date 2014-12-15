@@ -62,6 +62,16 @@ protected:
 	static const float VOLT_MAX = 12.0;
 	static const float VOLT_OFF = 12.0;
 
+	static const float MOTOR_RES = 0.0001; //%
+	static const float MOTOR_MIN = -1.0;
+	static const float MOTOR_MAX = 1.0;
+	static const float MOTOR_OFF = 1.0;
+
+	static const float TEMP_RES = 1.0; //°C TODO
+	static const float TEMP_MIN = -100.0; //TODO
+	static const float TEMP_MAX = 100.0; //TODO
+	static const float TEMP_OFF = 100.0; //TODO;
+
 
 	static const unsigned int TC_PACKAGE_SIZE = 5;
 	static const unsigned int TM_PACKAGE_SIZE = 94;
@@ -78,6 +88,11 @@ protected:
 		return (uint16_t) ((value+offset)/res);
 	};
 
+	static float uint162float(uint16_t value, float res, float offset) {
+
+		return (float) ((value*res) - offset);
+	}
+
 	static uint8_t highByte(uint16_t value) {
 		return (uint8_t) value >> 8;
 	}
@@ -88,6 +103,14 @@ protected:
 
 	static uint16_t joinBytes(uint8_t high, uint8_t low) {
 		return (uint16_t) (high << 8) + low;
+	}
+
+	static uint8_t bool2uint8(bool value) {
+		if(value) {
+			return 0xFF;
+		} else {
+			return 0x00;
+		}
 	}
 
 	void encodeType(PackageType type);
@@ -103,7 +126,7 @@ public:
 	 */
 	virtual void build() = 0;
 
-	uint8_t* getRaw() = 0;
+	uint8_t* getRaw();
 
 
 //	DataPackage parse(uint8_t* rawData, unsigned int rawDataSize);
