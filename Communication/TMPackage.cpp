@@ -958,12 +958,37 @@ TMPackage::TMPackage(SoftwareMode mode, CommandWord echoCmd, float echoParam,
 		float thetaFire2, float thetaFire3, float thetaFire4, float thetaFire5,
 		float timeFire1, float timeFire2, float timeFire3, float timeFire4,
 		float timeFire5, float tempFire1, float tempFire2, float tempFire3,
-		float tempFire4, float tempFire5, float thetaSun) {
-	//TODO
+		float tempFire4, float tempFire5, float thetaSun) : DataPackage(TM_PACKAGE_SIZE, TM_PACKAGE){
+
+	this->mode = mode;	this->echoCmd = echoCmd;	this->echoParam = echoParam;	this->time = time;	this->omegaX = omegaX;	this->omegaY = omegaY;	this->omegaZ = omegaZ;	this->accX = accX;
+	this->accY = accY;	this->accZ = accZ;	this->roll = roll;	this->pitch = pitch;	this->yaw = yaw;	this->quat1 = quat1;	this->quat2 = quat2;	this->quat3 = quat3;	this->quat4 = quat4;	this->vBat1 = vBat1;	this->vBat2 = vBat2;	this->vBat3 = vBat3;	this->vSolar1 = vSolar1;	this->vSolar2 = vSolar2;	this->motor = motor;	this->dep = dep;	this->chrg = chrg;
+	this->errorYaw = errorYaw;
+	this->errorOmegaZ = errorOmegaZ;
+	this->thetaFire1 = thetaFire1;
+	this->thetaFire2 = thetaFire2;
+	this->thetaFire3 = thetaFire3;
+	this->thetaFire4 = thetaFire4;
+	this->thetaFire5 = thetaFire5;
+	this->timeFire1 = timeFire1;
+	this->timeFire2 = timeFire2;
+	this->timeFire3 = timeFire3;
+	this->timeFire4 = timeFire4;
+	this->timeFire5 = timeFire5;
+	this->tempFire1 = tempFire1;
+	this->tempFire2 = tempFire2;
+	this->tempFire3 = tempFire3;
+	this->tempFire4 = tempFire4;
+	this->tempFire5 = tempFire5;
+	this->thetaSun = thetaSun;
+
+	build();
 
 }
 
 void TMPackage::build() {
+
+	validRaw = true;
+
 	encodeMode(mode);
 	encodeEchoCmd(echoCmd);
 	encodeEchoParam(echoParam);
@@ -1008,7 +1033,7 @@ void TMPackage::build() {
 	encodeTempFire5(tempFire5);
 	encodeThetaSun(thetaSun);
 
-	validRaw = true;
+
 
 }
 

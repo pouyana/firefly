@@ -20,7 +20,7 @@ protected:
 	unsigned int byteSize;
 	uint8_t* rawData;
 	bool validRaw;
-	Semaphore protect;
+	//Semaphore protect;
 
 	//actual data fields, common for all DataPackages
 	PackageType sync;

@@ -85,11 +85,13 @@ TCPackage::TCPackage(CommandWord cmd, uint16_t param) : DataPackage(TC_PACKAGE_S
 }
 
 void TCPackage::build() {
+
+	validRaw = true;
 	encodeType(sync);
 	encodeCmd(cmd);
 	encodeParam(param);
 	encodeStop(stop);
 
-	validRaw = true;
+
 }
 
