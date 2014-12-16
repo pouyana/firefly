@@ -18,49 +18,49 @@ private:
 	//actual data fields (still contain raw data only)
 
 	//sync inherited by DataPackage
-	SoftwareMode mode;     //soft-ware-mode 	1byte
-	CommandWord echoCmd;  //echo of the last received TC-command word	1byte
-	uint16_t echoParam;  //echo of the param of last received TC	2b
-	uint16_t time;
-	float omegaX;   //angular velocity in x direction [deg/sec]
-	float omegaY;
-	float omegaZ;
-	float accX;	   //acceleration in x direction [multiples of g]
-	float accY;
-	float accZ;
-	float roll;     //roll angle [deg]
-	float pitch;    //pitch angle [deg]
-	float yaw;      //yaw angle [deg]
-	float quat1;    //first vector comp. of quaternion representation
-	float quat2;
-	float quat3;
-	float quat4;    //scalar comp. of quaternion
-	float vBat1;     //battery voltage [V]
-	float vBat2;
-	float vBat3;
-	float vSolar1;  //1st solar panel voltage [V]
-	float vSolar2;  //2nd solar panel voltage [V]
-	float motor;	//duty cycle of motor
-	bool dep;      //binary indicator for solar panel deployment
-	bool chrg;     //binary indicator for battery charging
-	float errorYaw; //control-error of yaw [deg]
-	float errorOmegaZ; //control-error of angular velocity in z direction
-	float thetaFire1; //yaw angle of fire #1
-	float thetaFire2;
-	float thetaFire3;
-	float thetaFire4;
-	float thetaFire5;
-	float timeFire1; //MET of the detection of fire #1
-	uint16_t timeFire2;
-	uint16_t timeFire3;
-	uint16_t timeFire4;
-	uint16_t timeFire5;
-	float tempFire1;
-	float tempFire2;
-	float tempFire3;
-	float tempFire4;
-	float tempFire5;
-	float thetaSun;  //yaw angle of the sun
+	SoftwareMode mode = SAFE;     //soft-ware-mode 	1byte
+	CommandWord echoCmd = EMPTY;  //echo of the last received TC-command word	1byte
+	uint16_t echoParam = 0;  //echo of the param of last received TC	2b
+	uint16_t time = 0;
+	float omegaX = 0.0;   //angular velocity in x direction [deg/sec]
+	float omegaY = 0.0;
+	float omegaZ = 0.0;
+	float accX = 0.0;	   //acceleration in x direction [multiples of g]
+	float accY = 0.0;
+	float accZ = 0.0;
+	float roll = 0.0;     //roll angle [deg]
+	float pitch = 0.0;    //pitch angle [deg]
+	float yaw = 0.0;      //yaw angle [deg]
+	float quat1 = 0.0;    //first vector comp. of quaternion representation
+	float quat2 = 0.0;
+	float quat3 = 0.0;
+	float quat4 = 0.0;    //scalar comp. of quaternion
+	float vBat1 = 0.0;     //battery voltage [V]
+	float vBat2 = 0.0;
+	float vBat3 = 0.0;
+	float vSolar1 = 0.0;  //1st solar panel voltage [V]
+	float vSolar2 = 0.0;  //2nd solar panel voltage [V]
+	float motor = 0.0;	//duty cycle of motor
+	bool dep = false;      //binary indicator for solar panel deployment
+	bool chrg = false;     //binary indicator for battery charging
+	float errorYaw = 0.0; //control-error of yaw [deg]
+	float errorOmegaZ = 0.0; //control-error of angular velocity in z direction
+	float thetaFire1 = 0.0; //yaw angle of fire #1
+	float thetaFire2 = 0.0;
+	float thetaFire3 = 0.0;
+	float thetaFire4 = 0.0;
+	float thetaFire5 = 0.0;
+	float timeFire1 = 0.0; //MET of the detection of fire #1
+	uint16_t timeFire2 = 0;
+	uint16_t timeFire3 = 0;
+	uint16_t timeFire4 = 0;
+	uint16_t timeFire5 = 0;
+	float tempFire1 = 0.0;
+	float tempFire2 = 0.0;
+	float tempFire3 = 0.0;
+	float tempFire4 = 0.0;
+	float tempFire5 = 0.0;
+	float thetaSun = 0.0;  //yaw angle of the sun
 	//10 bytes for misc (not yet defined) purposes reserved
 	//stop-byte inherited by DataPackage
 

@@ -18,7 +18,7 @@ enum SoftwareMode {
 	THETA_DES 	= 	0x0010,
 	OMEGA_DES 	= 	0x0011,
 	CALIB 		= 	0x0012,
-	SAFFE 		= 	0x0000
+	SAFE 		= 	0x0000
 
 };
 

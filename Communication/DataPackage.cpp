@@ -13,6 +13,7 @@ DataPackage::DataPackage(unsigned int size, PackageType type) {
 	sync = type;
 	stop = 0;
 	validRaw = false;
+	protect = new Semaphore();
 };
 
 

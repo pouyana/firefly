@@ -34,7 +34,7 @@ TCPackage::TCPackage() : DataPackage(TC_PACKAGE_SIZE, TC_PACKAGE){
 	cmd = EMPTY;
 	param = 0;
 	stop = STOP_BYTE;
-	validRaw = true;
+	build();
 }
 
 TCPackage::~TCPackage() {
@@ -54,11 +54,7 @@ TCPackage::TCPackage(uint8_t* buffer, unsigned int bufferSize) : DataPackage(TC_
 
 	stop = STOP_BYTE;
 
-	encodeType(TC_PACKAGE);
-	encodeCmd(cmd);
-	encodeParam(param);
-	encodeStop(stop);
-	validRaw = true;
+	build();
 
 }
 
@@ -85,12 +81,7 @@ TCPackage::TCPackage(CommandWord cmd, uint16_t param) : DataPackage(TC_PACKAGE_S
 	this->param = param;
 	this->stop = STOP_BYTE;
 
-	encodeType(TC_PACKAGE);
-	encodeCmd(this->cmd);
-	encodeParam(this->param);
-	encodeStop(this->stop);
-	validRaw = true;
-
+	build();
 }
 
 void TCPackage::build() {
@@ -98,5 +89,7 @@ void TCPackage::build() {
 	encodeCmd(cmd);
 	encodeParam(param);
 	encodeStop(stop);
+
+	validRaw = true;
 }
 

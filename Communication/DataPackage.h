@@ -20,6 +20,7 @@ protected:
 	unsigned int byteSize;
 	uint8_t* rawData;
 	bool validRaw;
+	Semaphore protect;
 
 	//actual data fields, common for all DataPackages
 	PackageType sync;
@@ -111,6 +112,13 @@ protected:
 		} else {
 			return 0x00;
 		}
+	}
+
+	static bool uint82bool(uint8_t value) {
+		if(value == 0xFF) {
+			return true;
+		}
+		return false;
 	}
 
 	void encodeType(PackageType type);

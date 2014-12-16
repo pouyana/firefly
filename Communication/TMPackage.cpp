@@ -407,6 +407,7 @@ void TMPackage::encodeEchoCmd(CommandWord cmd) {
 }
 
 CommandWord TMPackage::decodeEchoCmd(uint8_t* buffer) {
+	return (CommandWord) buffer[POSITION_ECHO_CMD];
 }
 
 void TMPackage::encodeEchoParam(uint16_t param) {
@@ -415,6 +416,8 @@ void TMPackage::encodeEchoParam(uint16_t param) {
 }
 
 uint16_t TMPackage::decodeEchoParam(uint8_t* buffer) {
+	return joinBytes(buffer[POSITION_ECHO_PARAM + 1],
+			buffer[POSITION_ECHO_PARAM]);
 }
 
 void TMPackage::encodeTime(uint16_t time) {
@@ -424,6 +427,7 @@ void TMPackage::encodeTime(uint16_t time) {
 }
 
 uint16_t TMPackage::decodeTime(uint8_t* buffer) {
+	return joinBytes(buffer[POSITION_TIME + 1], buffer[POSITION_TIME]);
 }
 
 void TMPackage::encodeOmegaX(float value) {
@@ -433,6 +437,9 @@ void TMPackage::encodeOmegaX(float value) {
 }
 
 float TMPackage::decodeOmegaX(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_OMEGA_X + 1],
+			buffer[POSITION_OMEGA_X]);
+	return uint162float(tmp, ANG_VEL_RES, ANG_VEL_OFF);
 }
 
 void TMPackage::encodeOmegaY(float value) {
@@ -442,6 +449,9 @@ void TMPackage::encodeOmegaY(float value) {
 }
 
 float TMPackage::decodeOmegaY(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_OMEGA_Y + 1],
+			buffer[POSITION_OMEGA_Y]);
+	return uint162float(tmp, ANG_VEL_RES, ANG_VEL_OFF);
 }
 
 void TMPackage::encodeOmegaZ(float value) {
@@ -451,6 +461,9 @@ void TMPackage::encodeOmegaZ(float value) {
 }
 
 float TMPackage::decodeOmegaZ(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_OMEGA_Z + 1],
+			buffer[POSITION_OMEGA_Z]);
+	return uint162float(tmp, ANG_VEL_RES, ANG_VEL_OFF);
 }
 
 void TMPackage::encodeAccX(float value) {
@@ -460,6 +473,9 @@ void TMPackage::encodeAccX(float value) {
 }
 
 float TMPackage::decodeAccX(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_ACC_X + 1],
+			buffer[POSITION_ACC_X]);
+	return uint162float(tmp, ACC_RES, ACC_OFF);
 }
 
 void TMPackage::encodeAccY(float value) {
@@ -469,6 +485,9 @@ void TMPackage::encodeAccY(float value) {
 }
 
 float TMPackage::decodeAccY(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_ACC_Y + 1],
+			buffer[POSITION_ACC_Y]);
+	return uint162float(tmp, ACC_RES, ACC_OFF);
 }
 
 void TMPackage::encodeAccZ(float value) {
@@ -478,6 +497,9 @@ void TMPackage::encodeAccZ(float value) {
 }
 
 float TMPackage::decodeAccZ(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_ACC_Z + 1],
+			buffer[POSITION_ACC_Z]);
+	return uint162float(tmp, ACC_RES, ACC_OFF);
 }
 
 void TMPackage::encodeRoll(float value) {
@@ -487,6 +509,8 @@ void TMPackage::encodeRoll(float value) {
 }
 
 float TMPackage::decodeRoll(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_ROLL + 1], buffer[POSITION_ROLL]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodePitch(float value) {
@@ -496,6 +520,9 @@ void TMPackage::encodePitch(float value) {
 }
 
 float TMPackage::decodePitch(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_PITCH + 1],
+			buffer[POSITION_PITCH]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodeYaw(float value) {
@@ -505,6 +532,8 @@ void TMPackage::encodeYaw(float value) {
 }
 
 float TMPackage::decodeYaw(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_YAW + 1], buffer[POSITION_YAW]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodeQuat1(float value) {
@@ -514,6 +543,9 @@ void TMPackage::encodeQuat1(float value) {
 }
 
 float TMPackage::decodeQuat1(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_QUAT_1 + 1],
+			buffer[POSITION_QUAT_1]);
+	return uint162float(tmp, QUAT_RES, QUAT_OFF);
 }
 
 void TMPackage::encodeQuat2(float value) {
@@ -523,6 +555,9 @@ void TMPackage::encodeQuat2(float value) {
 }
 
 float TMPackage::decodeQuat2(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_QUAT_2 + 1],
+			buffer[POSITION_QUAT_2]);
+	return uint162float(tmp, QUAT_RES, QUAT_OFF);
 }
 
 void TMPackage::encodeQuat3(float value) {
@@ -532,6 +567,9 @@ void TMPackage::encodeQuat3(float value) {
 }
 
 float TMPackage::decodeQuat3(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_QUAT_3 + 1],
+			buffer[POSITION_QUAT_3]);
+	return uint162float(tmp, QUAT_RES, QUAT_OFF);
 }
 
 void TMPackage::encodeQuat4(float value) {
@@ -541,6 +579,9 @@ void TMPackage::encodeQuat4(float value) {
 }
 
 float TMPackage::decodeQuat4(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_QUAT_4 + 1],
+			buffer[POSITION_QUAT_4]);
+	return uint162float(tmp, QUAT_RES, QUAT_OFF);
 }
 
 void TMPackage::encodeVBat1(float value) {
@@ -550,6 +591,9 @@ void TMPackage::encodeVBat1(float value) {
 }
 
 float TMPackage::decodeVBat1(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_V_BAT_1 + 1],
+			buffer[POSITION_V_BAT_1]);
+	return uint162float(tmp, VOLT_RES, VOLT_OFF);
 }
 
 void TMPackage::encodeVBat2(float value) {
@@ -559,6 +603,9 @@ void TMPackage::encodeVBat2(float value) {
 }
 
 float TMPackage::decodeVBat2(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_V_BAT_2 + 1],
+			buffer[POSITION_V_BAT_2]);
+	return uint162float(tmp, VOLT_RES, VOLT_OFF);
 }
 
 void TMPackage::encodeVBat3(float value) {
@@ -568,6 +615,9 @@ void TMPackage::encodeVBat3(float value) {
 }
 
 float TMPackage::decodeVBat3(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_V_BAT_3 + 1],
+			buffer[POSITION_V_BAT_3]);
+	return uint162float(tmp, VOLT_RES, VOLT_OFF);
 }
 
 void TMPackage::encodeVSolar1(float value) {
@@ -577,6 +627,9 @@ void TMPackage::encodeVSolar1(float value) {
 }
 
 float TMPackage::decodeVSolar1(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_V_SOLAR_1 + 1],
+			buffer[POSITION_V_SOLAR_1]);
+	return uint162float(tmp, VOLT_RES, VOLT_OFF);
 }
 
 void TMPackage::encodeVSolar2(float value) {
@@ -586,6 +639,9 @@ void TMPackage::encodeVSolar2(float value) {
 }
 
 float TMPackage::decodeVSolar2(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_V_SOLAR_2 + 1],
+			buffer[POSITION_V_SOLAR_2]);
+	return uint162float(tmp, VOLT_RES, VOLT_OFF);
 }
 
 void TMPackage::encodeMotor(float value) {
@@ -595,18 +651,25 @@ void TMPackage::encodeMotor(float value) {
 }
 
 float TMPackage::decodeMotor(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_MOTOR + 1],
+			buffer[POSITION_MOTOR]);
+	return uint162float(tmp, MOTOR_RES, MOTOR_OFF);
 }
 
-void TMPackage::encodeDep(bool value) { //TODO
+void TMPackage::encodeDep(bool value) {
+	rawData[POSITION_DEP] = bool2uint8(value);
 }
 
 bool TMPackage::decodeDep(uint8_t* buffer) {
+	return uint82bool(buffer[POSITION_DEP]);
 }
 
-void TMPackage::encodeChrg(bool value) { //TODO
+void TMPackage::encodeChrg(bool value) {
+	rawData[POSITION_CHRG] = bool2uint8(value);
 }
 
 bool TMPackage::decodeChrg(uint8_t* buffer) {
+	return uint82bool(buffer[POSITION_CHRG]);
 }
 
 void TMPackage::encodeErrYaw(float value) {
@@ -616,6 +679,9 @@ void TMPackage::encodeErrYaw(float value) {
 }
 
 float TMPackage::decodeErrYaw(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_ERR_YAW + 1],
+			buffer[POSITION_ERR_YAW]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodeErrOmegaZ(float value) {
@@ -625,6 +691,9 @@ void TMPackage::encodeErrOmegaZ(float value) {
 }
 
 float TMPackage::decodeErrOmegaZ(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_ERR_OMEGA_Z + 1],
+			buffer[POSITION_ERR_OMEGA_Z]);
+	return uint162float(tmp, ANG_VEL_RES, ANG_VEL_OFF);
 }
 
 void TMPackage::encodeThetaFire1(float value) {
@@ -634,6 +703,9 @@ void TMPackage::encodeThetaFire1(float value) {
 }
 
 float TMPackage::decodeThetaFire1(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_THETA_FIRE_1 + 1],
+			buffer[POSITION_THETA_FIRE_1]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodeThetaFire2(float value) {
@@ -643,6 +715,9 @@ void TMPackage::encodeThetaFire2(float value) {
 }
 
 float TMPackage::decodeThetaFire2(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_THETA_FIRE_2 + 1],
+			buffer[POSITION_THETA_FIRE_2]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodeThetaFire3(float value) {
@@ -652,6 +727,9 @@ void TMPackage::encodeThetaFire3(float value) {
 }
 
 float TMPackage::decodeThetaFire3(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_THETA_FIRE_3 + 1],
+			buffer[POSITION_THETA_FIRE_3]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodeThetaFire4(float value) {
@@ -661,6 +739,9 @@ void TMPackage::encodeThetaFire4(float value) {
 }
 
 float TMPackage::decodeThetaFire4(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_THETA_FIRE_4 + 1],
+			buffer[POSITION_THETA_FIRE_4]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodeThetaFire5(float value) {
@@ -670,6 +751,9 @@ void TMPackage::encodeThetaFire5(float value) {
 }
 
 float TMPackage::decodeThetaFire5(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_THETA_FIRE_5 + 1],
+			buffer[POSITION_THETA_FIRE_5]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
 void TMPackage::encodeTimeFire1(uint16_t value) {
@@ -678,7 +762,8 @@ void TMPackage::encodeTimeFire1(uint16_t value) {
 }
 
 uint16_t TMPackage::decodeTimeFire1(uint8_t* buffer) {
-
+	return joinBytes(buffer[POSITION_TIME_FIRE_1 + 1],
+			buffer[POSITION_TIME_FIRE_1]);
 }
 
 void TMPackage::encodeTimeFire2(uint16_t value) {
@@ -687,6 +772,8 @@ void TMPackage::encodeTimeFire2(uint16_t value) {
 }
 
 uint16_t TMPackage::decodeTimeFire2(uint8_t* buffer) {
+	return joinBytes(buffer[POSITION_TIME_FIRE_2 + 1],
+			buffer[POSITION_TIME_FIRE_2]);
 }
 
 void TMPackage::encodeTimeFire3(uint16_t value) {
@@ -695,6 +782,8 @@ void TMPackage::encodeTimeFire3(uint16_t value) {
 }
 
 uint16_t TMPackage::decodeTimeFire3(uint8_t* buffer) {
+	return joinBytes(buffer[POSITION_TIME_FIRE_3 + 1],
+			buffer[POSITION_TIME_FIRE_3]);
 }
 
 void TMPackage::encodeTimeFire4(uint16_t value) {
@@ -703,6 +792,8 @@ void TMPackage::encodeTimeFire4(uint16_t value) {
 }
 
 uint16_t TMPackage::decodeTimeFire4(uint8_t* buffer) {
+	return joinBytes(buffer[POSITION_TIME_FIRE_4 + 1],
+			buffer[POSITION_TIME_FIRE_4]);
 }
 
 void TMPackage::encodeTimeFire5(uint16_t value) {
@@ -711,71 +802,151 @@ void TMPackage::encodeTimeFire5(uint16_t value) {
 }
 
 uint16_t TMPackage::decodeTimeFire5(uint8_t* buffer) {
+	return joinBytes(buffer[POSITION_TIME_FIRE_5 + 1],
+			buffer[POSITION_TIME_FIRE_5]);
 }
 
 void TMPackage::encodeTempFire1(float value) {
 	uint16_t tmp = float2uint16(value, TEMP_RES, TEMP_OFF);
-		rawData[POSITION_TEMP_FIRE_1] = lowByte(tmp);
-		rawData[POSITION_TEMP_FIRE_1 + 1] = highByte(tmp);
+	rawData[POSITION_TEMP_FIRE_1] = lowByte(tmp);
+	rawData[POSITION_TEMP_FIRE_1 + 1] = highByte(tmp);
 }
 
 float TMPackage::decodeTempFire1(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_TEMP_FIRE_1 + 1],
+			buffer[POSITION_TEMP_FIRE_1]);
+	return uint162float(tmp, TEMP_RES, TEMP_OFF);
 }
 
 void TMPackage::encodeTempFire2(float value) {
 	uint16_t tmp = float2uint16(value, TEMP_RES, TEMP_OFF);
-		rawData[POSITION_TEMP_FIRE_2] = lowByte(tmp);
-		rawData[POSITION_TEMP_FIRE_2 + 1] = highByte(tmp);
+	rawData[POSITION_TEMP_FIRE_2] = lowByte(tmp);
+	rawData[POSITION_TEMP_FIRE_2 + 1] = highByte(tmp);
 }
 
 float TMPackage::decodeTempFire2(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_TEMP_FIRE_2 + 1],
+			buffer[POSITION_TEMP_FIRE_2]);
+	return uint162float(tmp, TEMP_RES, TEMP_OFF);
 
 }
 
 void TMPackage::encodeTempFire3(float value) {
 	uint16_t tmp = float2uint16(value, TEMP_RES, TEMP_OFF);
-			rawData[POSITION_TEMP_FIRE_3] = lowByte(tmp);
-			rawData[POSITION_TEMP_FIRE_3 + 1] = highByte(tmp);
+	rawData[POSITION_TEMP_FIRE_3] = lowByte(tmp);
+	rawData[POSITION_TEMP_FIRE_3 + 1] = highByte(tmp);
 }
 
 float TMPackage::decodeTempFire3(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_TEMP_FIRE_3 + 1],
+			buffer[POSITION_TEMP_FIRE_3]);
+	return uint162float(tmp, TEMP_RES, TEMP_OFF);
 }
 
 void TMPackage::encodeTempFire4(float value) {
 	uint16_t tmp = float2uint16(value, TEMP_RES, TEMP_OFF);
-				rawData[POSITION_TEMP_FIRE_4] = lowByte(tmp);
-				rawData[POSITION_TEMP_FIRE_4 + 1] = highByte(tmp);
+	rawData[POSITION_TEMP_FIRE_4] = lowByte(tmp);
+	rawData[POSITION_TEMP_FIRE_4 + 1] = highByte(tmp);
 
 }
 
 float TMPackage::decodeTempFire4(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_TEMP_FIRE_4 + 1],
+			buffer[POSITION_TEMP_FIRE_4]);
+	return uint162float(tmp, TEMP_RES, TEMP_OFF);
 }
 
 void TMPackage::encodeTempFire5(float value) {
 	uint16_t tmp = float2uint16(value, TEMP_RES, TEMP_OFF);
-				rawData[POSITION_TEMP_FIRE_5] = lowByte(tmp);
-				rawData[POSITION_TEMP_FIRE_5 + 1] = highByte(tmp);
+	rawData[POSITION_TEMP_FIRE_5] = lowByte(tmp);
+	rawData[POSITION_TEMP_FIRE_5 + 1] = highByte(tmp);
 }
 
 float TMPackage::decodeTempFire5(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_TEMP_FIRE_5 + 1],
+			buffer[POSITION_TEMP_FIRE_5]);
+	return uint162float(tmp, TEMP_RES, TEMP_OFF);
 }
 
 void TMPackage::encodeThetaSun(float value) {
 	uint16_t tmp = float2uint16(value, ANGLE_RES, ANGLE_OFF);
-				rawData[POSITION_THETA_SUN] = lowByte(tmp);
-				rawData[POSITION_THETA_SUN + 1] = highByte(tmp);
+	rawData[POSITION_THETA_SUN] = lowByte(tmp);
+	rawData[POSITION_THETA_SUN + 1] = highByte(tmp);
 }
 
 float TMPackage::decodeThetaSun(uint8_t* buffer) {
+	uint16_t tmp = joinBytes(buffer[POSITION_THETA_SUN + 1],
+			buffer[POSITION_THETA_SUN]);
+	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
-TMPackage::TMPackage() {
+TMPackage::TMPackage() :
+		DataPackage(TM_PACKAGE_SIZE, TM_PACKAGE) {
+
+	//all other fields initialized with 0
+	stop = STOP_BYTE;
+	build();
 }
 
 TMPackage::~TMPackage() {
 }
 
-TMPackage::TMPackage(uint8_t* buffer, unsigned int bufferSize) {
+TMPackage::TMPackage(uint8_t* buffer, unsigned int bufferSize) :
+		DataPackage(TM_PACKAGE_SIZE, TM_PACKAGE) {
+
+	//if invalid package is in buffer an empty one is created
+	if (bufferSize != TM_PACKAGE_SIZE || buffer[POSITION_SYNC] != TM_PACKAGE
+			|| buffer[POSITION_STOP] != STOP_BYTE) {
+		//all fields stay initialized with 0
+
+	} else {
+		decodeMode(buffer);
+		decodeEchoCmd(buffer);
+		decodeEchoParam(buffer);
+		decodeTime(buffer);
+		decodeOmegaX(buffer);
+		decodeOmegaY(buffer);
+		decodeOmegaZ(buffer);
+		decodeAccX(buffer);
+		decodeAccY(buffer);
+		decodeAccZ(buffer);
+		decodeRoll(buffer);
+		decodePitch(buffer);
+		decodeYaw(buffer);
+		decodeQuat1(buffer);
+		decodeQuat2(buffer);
+		decodeQuat3(buffer);
+		decodeQuat4(buffer);
+		decodeVBat1(buffer);
+		decodeVBat2(buffer);
+		decodeVBat3(buffer);
+		decodeVSolar1(buffer);
+		decodeVSolar2(buffer);
+		decodeMotor(buffer);
+		decodeDep(buffer);
+		decodeChrg(buffer);
+		decodeErrYaw(buffer);
+		decodeErrOmegaZ(buffer);
+		decodeThetaFire1(buffer);
+		decodeThetaFire2(buffer);
+		decodeThetaFire3(buffer);
+		decodeThetaFire4(buffer);
+		decodeThetaFire5(buffer);
+		decodeTimeFire1(buffer);
+		decodeTimeFire2(buffer);
+		decodeTimeFire3(buffer);
+		decodeTimeFire4(buffer);
+		decodeTimeFire5(buffer);
+		decodeTempFire1(buffer);
+		decodeTempFire2(buffer);
+		decodeTempFire3(buffer);
+		decodeTempFire4(buffer);
+		decodeTempFire5(buffer);
+		decodeThetaSun(buffer);
+	}
+
+	stop = STOP_BYTE;
+	build();
 }
 
 TMPackage::TMPackage(SoftwareMode mode, CommandWord echoCmd, float echoParam,
@@ -788,9 +959,56 @@ TMPackage::TMPackage(SoftwareMode mode, CommandWord echoCmd, float echoParam,
 		float timeFire1, float timeFire2, float timeFire3, float timeFire4,
 		float timeFire5, float tempFire1, float tempFire2, float tempFire3,
 		float tempFire4, float tempFire5, float thetaSun) {
+	//TODO
+
 }
 
 void TMPackage::build() {
-}
+	encodeMode(mode);
+	encodeEchoCmd(echoCmd);
+	encodeEchoParam(echoParam);
+	encodeTime(time);
+	encodeOmegaX(omegaX);
+	encodeOmegaY(omegaY);
+	encodeOmegaZ(omegaZ);
+	encodeAccX(accX);
+	encodeAccY(accY);
+	encodeAccZ(accZ);
+	encodeRoll(roll);
+	encodePitch(pitch);
+	encodeYaw(yaw);
+	encodeQuat1(quat1);
+	encodeQuat2(quat2);
+	encodeQuat3(quat3);
+	encodeQuat4(quat4);
+	encodeVBat1(vBat1);
+	encodeVBat2(vBat2);
+	encodeVBat3(vBat3);
+	encodeVSolar1(vSolar1);
+	encodeVSolar2(vSolar2);
+	encodeMotor(motor);
+	encodeDep(dep);
+	encodeChrg(chrg);
+	encodeErrYaw(errorYaw);
+	encodeErrOmegaZ(errorOmegaZ);
+	encodeThetaFire1(thetaFire1);
+	encodeThetaFire2(thetaFire2);
+	encodeThetaFire3(thetaFire3);
+	encodeThetaFire4(thetaFire4);
+	encodeThetaFire5(thetaFire5);
+	encodeTimeFire1(timeFire1);
+	encodeTimeFire2(timeFire2);
+	encodeTimeFire3(timeFire3);
+	encodeTimeFire4(timeFire4);
+	encodeTimeFire5(timeFire5);
+	encodeTempFire1(tempFire1);
+	encodeTempFire2(tempFire2);
+	encodeTempFire3(tempFire3);
+	encodeTempFire4(tempFire4);
+	encodeTempFire5(tempFire5);
+	encodeThetaSun(thetaSun);
 
+	validRaw = true;
+
+}
 
