@@ -880,6 +880,11 @@ float TMPackage::decodeThetaSun(uint8_t* buffer) {
 	return uint162float(tmp, ANGLE_RES, ANGLE_OFF);
 }
 
+void TMPackage::encodeStop(uint8_t stop) {
+	rawData[POSITION_STOP] = stop;
+
+}
+
 TMPackage::TMPackage() :
 		DataPackage(TM_PACKAGE_SIZE, TM_PACKAGE) {
 
@@ -1032,8 +1037,15 @@ void TMPackage::build() {
 	encodeTempFire4(tempFire4);
 	encodeTempFire5(tempFire5);
 	encodeThetaSun(thetaSun);
+	encodeStop(stop);
 
 
+}
 
+uint8_t* TMPackage::getRaw() {
+	if(!validRaw) {
+		build();
+	}
+	return rawData;
 }
 

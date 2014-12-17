@@ -241,6 +241,8 @@ private:
 	void encodeThetaSun(float value);
 	float decodeThetaSun(uint8_t* buffer);
 
+	void encodeStop(uint8_t stop);
+
 public:
 	/*
 	 * creates an empty well formatted TM Package
@@ -358,6 +360,9 @@ public:
 	void setSolar2(float solar2);
 	float getYaw() const;
 	void setYaw(float yaw);
+
+
+	uint8_t* getRaw();
 };
 
 #endif /* COMMUNICATION_TMPACKAGE_H_ */

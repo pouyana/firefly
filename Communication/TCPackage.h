@@ -58,6 +58,8 @@ public:
 	void setCmd(CommandWord cmd);
 	uint16_t getParam() const;
 	void setParam(uint16_t param);
+
+	uint8_t* getRaw();
 };
 
 

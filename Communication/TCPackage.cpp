@@ -95,3 +95,11 @@ void TCPackage::build() {
 
 }
 
+uint8_t* TCPackage::getRaw() {
+	if(!validRaw) {
+		build();
+	}
+	return rawData;
+
+}
+

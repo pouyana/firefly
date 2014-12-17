@@ -94,6 +94,7 @@ protected:
 		return (float) ((value*res) - offset);
 	}
 
+public:
 	static uint8_t highByte(uint16_t value) {
 		return (uint8_t) value >> 8;
 	}
@@ -102,6 +103,7 @@ protected:
 		return (uint8_t) (value && 0x00FF);
 	}
 
+protected:
 	static uint16_t joinBytes(uint8_t high, uint8_t low) {
 		return (uint16_t) (high << 8) + low;
 	}
