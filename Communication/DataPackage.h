@@ -28,7 +28,7 @@ protected:
 
 	//static final constants for raw-data conversion
 
-
+public:
 	//RES = resolution, equals the least significant digit
 	//MIN = lower bound of valid range of values
 	//MAX = upper bound of valid range of values
@@ -73,11 +73,11 @@ protected:
 	static const float TEMP_MAX = 100.0; //TODO
 	static const float TEMP_OFF = 100.0; //TODO;
 
-
 	static const unsigned int TC_PACKAGE_SIZE = 5;
 	static const unsigned int TM_PACKAGE_SIZE = 94;
 	static const unsigned int VIDEO_PACKAGE_SIZE = 0; //TODO
 
+protected:
 	//byteFields
 	static const unsigned int POSITION_SYNC = 0;
 
@@ -89,12 +89,13 @@ protected:
 		return (uint16_t) ((value+offset)/res);
 	};
 
+public:
 	static float uint162float(uint16_t value, float res, float offset) {
 
 		return (float) ((value*res) - offset);
 	}
 
-public:
+
 	static uint8_t highByte(uint16_t value) {
 		return (uint8_t) (value >> 8);
 	}
@@ -103,7 +104,6 @@ public:
 		return (uint8_t) value;
 	}
 
-protected:
 	static uint16_t joinBytes(uint8_t high, uint8_t low) {
 		return (uint16_t) (high << 8) + low;
 	}
@@ -122,6 +122,8 @@ protected:
 		}
 		return false;
 	}
+
+protected:
 
 	void encodeType(PackageType type);
 	PackageType decodeType();

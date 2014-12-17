@@ -15,7 +15,7 @@
 
 Semaphore testSemaphore;
 SimpleRing<int> myBuffer(20, &testSemaphore);
-HAL_UART myBlue(UART_IDX2);
+HAL_UART myBlue(UART_IDX2); //blue IDX2; USB IDX3
 
 
 TMThread::TMThread() : Thread("TM") {
@@ -67,7 +67,7 @@ TMPackage testPackage;
 
 buffer = (char*) testPackage.getRaw();
 
-//while(1) {
+while(1) {
 
 		status = blue->write(buffer, 94);
 		//blue->write(, 1);
@@ -76,7 +76,8 @@ buffer = (char*) testPackage.getRaw();
 		}
 
 
-//}
+		suspendCallerUntil(NOW() + 1*SECONDS);
+}
 
 
 }

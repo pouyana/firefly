@@ -57,134 +57,134 @@ public:
 
 
 
-//		uint8_t txBuf[2] = { 0 };
-//
-//		i2c1.init();
-//
-//#if L3G4200D_TEST
-//		txBuf[0] = 0x20; // address of CTRL_REG1
-//		txBuf[1] = 0x0F; // value of CTRL_REG1 -> normal mode, x,y,z enable
-//		if (i2c1.write(L3G4200D_GYR_ADDR, txBuf, 2) < 0)
-//			i2c1.init();
-//		txBuf[0] = 0x23; // address of CTRL_REG4_A
-//		txBuf[1] = 0x40; // value of CTRL_REG4_A -> MSB first
-//		//txBuf[1] = 0x00; // value of CTRL_REG4_A -> LSB first
-//		if (i2c1.write(L3G4200D_GYR_ADDR, txBuf, 2) < 0)
-//			i2c1.init();
-//#endif
-//#if LSM303_ACC_TEST
-//		txBuf[0] = 0x20; // address of CTRL_REG1_A
-//		txBuf[1] = 0x27;// value of CTRL_REG1_A -> normal mode, x,y,z enable
-//		if (i2c1.write(LSM303DLH_ACC_ADDR,txBuf,2) < 0) i2c1.init();
-//		txBuf[0] = 0x23;// address of CTRL_REG4_A
-//		txBuf[1] = 0x40;// value of CTRL_REG4_A -> MSB first
-//		//txBuf[1] = 0x00; // value of CTRL_REG4_A -> LSB first
-//		if (i2c1.write(LSM303DLH_ACC_ADDR,txBuf,2) < 0) i2c1.init();
-//#endif
-//#if LSM303_MAG_TEST
-//		txBuf[0] = 0x02; // address of MR_REG
-//		txBuf[1] = 0x00;// value of MR_REG -> continuous mode
-//		if (i2c1.write(LSM303DLH_MAG_ADDR, txBuf, 2) < 0)
-//		i2c1.init();
-//#endif
+		uint8_t txBuf[2] = { 0 };
+
+		i2c1.init();
+
+#if L3G4200D_TEST
+		txBuf[0] = 0x20; // address of CTRL_REG1
+		txBuf[1] = 0x0F; // value of CTRL_REG1 -> normal mode, x,y,z enable
+		if (i2c1.write(L3G4200D_GYR_ADDR, txBuf, 2) < 0)
+			i2c1.init();
+		txBuf[0] = 0x23; // address of CTRL_REG4_A
+		txBuf[1] = 0x40; // value of CTRL_REG4_A -> MSB first
+		//txBuf[1] = 0x00; // value of CTRL_REG4_A -> LSB first
+		if (i2c1.write(L3G4200D_GYR_ADDR, txBuf, 2) < 0)
+			i2c1.init();
+#endif
+#if LSM303_ACC_TEST
+		txBuf[0] = 0x20; // address of CTRL_REG1_A
+		txBuf[1] = 0x27;// value of CTRL_REG1_A -> normal mode, x,y,z enable
+		if (i2c1.write(LSM303DLH_ACC_ADDR,txBuf,2) < 0) i2c1.init();
+		txBuf[0] = 0x23;// address of CTRL_REG4_A
+		txBuf[1] = 0x40;// value of CTRL_REG4_A -> MSB first
+		//txBuf[1] = 0x00; // value of CTRL_REG4_A -> LSB first
+		if (i2c1.write(LSM303DLH_ACC_ADDR,txBuf,2) < 0) i2c1.init();
+#endif
+#if LSM303_MAG_TEST
+		txBuf[0] = 0x02; // address of MR_REG
+		txBuf[1] = 0x00;// value of MR_REG -> continuous mode
+		if (i2c1.write(LSM303DLH_MAG_ADDR, txBuf, 2) < 0)
+		i2c1.init();
+#endif
 	}
 
 	void run() {
-//		uint8_t rxBuf[6] = { 0 };
-//		uint8_t txBuf[3] = { 0 };
-//		int32_t err[10] = { 0 };
+		uint8_t rxBuf[6] = { 0 };
+		uint8_t txBuf[3] = { 0 };
+		int32_t err[10] = { 0 };
 
-		TCPackage test(EMPTY, (uint16_t) 0x1200);
-		uint8_t buffer[10];
-		uint16_t temp = 0x12;
+//		TCPackage test(EMPTY, (uint16_t) 0x1200);
+//		uint8_t buffer[10];
+//		uint16_t temp = 0x12;
 
-//
+
 		while (1) {
 
-			xprintf("B");
-			buffer[0] = DataPackage::lowByte(temp);
-			uart.write((char*) buffer,1);
+//			xprintf("B");
+//			buffer[0] = DataPackage::lowByte(temp);
+//			uart.write((char*) buffer,1);
+//
+//			//uart.write((char*) buffer, 1);
+//			//uart.write((char*) &(DataPackage::lowByte(0x12FF)),1);
+////			for(int i = 0; i < 5; i++) {
+////				uart.write((char*) buffer, 5);
+////			}
+//			xprintf("A");
 
-			//uart.write((char*) buffer, 1);
-			//uart.write((char*) &(DataPackage::lowByte(0x12FF)),1);
-//			for(int i = 0; i < 5; i++) {
-//				uart.write((char*) buffer, 5);
-//			}
-			xprintf("A");
+			/** check out L3G4200D (extern) **/
+#if L3G4200D_TEST
+			memset(rxBuf, 0, sizeof(rxBuf));
+			memset(txBuf, 0, sizeof(txBuf));
+			txBuf[0] = 0x28 | 0x80; // start reading with x-low register, read multiple register
+			err[0] = i2c1.writeRead(L3G4200D_GYR_ADDR, txBuf, 1, rxBuf, 6);
+			txBuf[0] = 0x0f; // WHO_AM_I Register
+			err[1] = i2c1.writeRead(L3G4200D_GYR_ADDR, txBuf, 1, &rxBuf[6], 1);
+			if (printError("L3G4200D GYRO", err, 2) > 0) {
+				xprintf("Init I2C and all slaves ...\n\n");
+				init(); // init i2c1/i2c2 and all slaves
+			} else {
+				PRINTF("L3G4200D \"Who am I\" reg (0xD3):0x%x\n", rxBuf[6]);
+				//PRINTF("L3G4200D GYRO x,y,z: %d, %d, %d\n",rxBuf[0]|(rxBuf[1]<<8), rxBuf[2]|(rxBuf[3]<<8), rxBuf[4]|(rxBuf[5]<<8)); // LSB first
+				xprintf("L3G4200D GYRO x,y,z: %d, %d, %d\n\n",
+						rxBuf[1] | (rxBuf[0] << 8), rxBuf[3] | (rxBuf[2] << 8),
+						rxBuf[5] | (rxBuf[4] << 8)); // MSB first
+			}
 
-//			/** check out L3G4200D (extern) **/
-//#if L3G4200D_TEST
-//			memset(rxBuf, 0, sizeof(rxBuf));
-//			memset(txBuf, 0, sizeof(txBuf));
-//			txBuf[0] = 0x28 | 0x80; // start reading with x-low register, read multiple register
-//			err[0] = i2c1.writeRead(L3G4200D_GYR_ADDR, txBuf, 1, rxBuf, 6);
-//			txBuf[0] = 0x0f; // WHO_AM_I Register
-//			err[1] = i2c1.writeRead(L3G4200D_GYR_ADDR, txBuf, 1, &rxBuf[6], 1);
-//			if (printError("L3G4200D GYRO", err, 2) > 0) {
-//				xprintf("Init I2C and all slaves ...\n\n");
-//				init(); // init i2c1/i2c2 and all slaves
-//			} else {
-//				PRINTF("L3G4200D \"Who am I\" reg (0xD3):0x%x\n", rxBuf[6]);
-//				//PRINTF("L3G4200D GYRO x,y,z: %d, %d, %d\n",rxBuf[0]|(rxBuf[1]<<8), rxBuf[2]|(rxBuf[3]<<8), rxBuf[4]|(rxBuf[5]<<8)); // LSB first
-//				xprintf("L3G4200D GYRO x,y,z: %d, %d, %d\n\n",
-//						rxBuf[1] | (rxBuf[0] << 8), rxBuf[3] | (rxBuf[2] << 8),
-//						rxBuf[5] | (rxBuf[4] << 8)); // MSB first
-//			}
-//
-//#endif
-//
-//			/** check out LSM303 (extern) **/
-//#if LSM303_ACC_TEST
-//			// ACC
-//			memset(rxBuf,0,sizeof(rxBuf));
-//			memset(txBuf,0,sizeof(txBuf));
-//			txBuf[0] = 0x28 | 0x80;// start reading with x-low register, read multiple register
-//			err[0] = i2c1.writeRead(LSM303DLH_ACC_ADDR,txBuf,1,rxBuf,6);
-//			if (printError("LSM303 ACC", err, 1) > 0) {
-//				xprintf("Init I2C and all slaves ...\n\n");
-//				init(); // init i2c1/i2c2 and all slaves
-//			} else {
-//				//PRINTF("LSM303 ACC x,y,z: %d, %d, %d\n\n",rxBuf[0]|(rxBuf[1]<<8), rxBuf[2]|(rxBuf[3]<<8), rxBuf[4]|(rxBuf[5]<<8)); // LSB first
-//				xprintf("LSM303 ACC x,y,z: %d, %d, %d\n\n",rxBuf[1]|(rxBuf[0]<<8), rxBuf[3]|(rxBuf[2]<<8), rxBuf[5]|(rxBuf[4]<<8));// MSB first
-//			}
-//#endif
-//
-//#if TSL2561_TEST
-//			// ILUM
-//			memset(rxBuf,0,sizeof(rxBuf));
-//			memset(txBuf,0,sizeof(txBuf));
-//
-////			txBuf[0] = TSL2561_ON;
-////			err[0] = i2c1.write(TSL2561_ADDR, txBuf, 1);
-//
-//			txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_WORD_BIT | TSL2561_REGISTER_CHAN1_LOW;
-//
-//			//err[0] = i2c1.writeRead(TSL2561_ADDR,txBuf,1,rxBuf,1);
-//			err[1] = i2c1.writeRead(TSL2561_ADDR,txBuf,1,rxBuf,2);
-////			err[1] = i2c1.write(TSL2561_ADDR,txxBuf,2);
-//			if (printError("TSL2561 ", err, 2) > 0) {
-//				xprintf("Init I2C and all slaves ...\n\n");
-//				init(); // init i2c1/i2c2 and all slaves
-//			} else {
-//				xprintf("TSL2561 LOW: %d, HIGH: %d",rxBuf[0], rxBuf[1]);
-//			}
-//#endif
-//
-//			// MAG
-//#if LSM303_MAG_TEST
-//			memset(rxBuf, 0, sizeof(rxBuf));
-//			memset(txBuf, 0, sizeof(txBuf));
-//			txBuf[0] = 0x03; // start reading with x-high register, read multiple register
-//			err[0] = i2c1.writeRead(LSM303DLH_MAG_ADDR, txBuf, 1, rxBuf, 6);
-//			if (printError("LSM303 MAG", err, 1) > 0) {
-//				xprintf("Init I2C and all slaves ...\n\n");
-//				init(); // init i2c1/i2c2 and all slaves
-//			} else {
-//				xprintf("LSM303 MAG x,y,z: %d, %d, %d\n\n",
-//						rxBuf[1] | rxBuf[0] << 8, rxBuf[3] | rxBuf[2] << 8,
-//						rxBuf[5] | rxBuf[4] << 8); // MSB first
-//			}
-//#endif
+#endif
+
+			/** check out LSM303 (extern) **/
+#if LSM303_ACC_TEST
+			// ACC
+			memset(rxBuf,0,sizeof(rxBuf));
+			memset(txBuf,0,sizeof(txBuf));
+			txBuf[0] = 0x28 | 0x80;// start reading with x-low register, read multiple register
+			err[0] = i2c1.writeRead(LSM303DLH_ACC_ADDR,txBuf,1,rxBuf,6);
+			if (printError("LSM303 ACC", err, 1) > 0) {
+				xprintf("Init I2C and all slaves ...\n\n");
+				init(); // init i2c1/i2c2 and all slaves
+			} else {
+				//PRINTF("LSM303 ACC x,y,z: %d, %d, %d\n\n",rxBuf[0]|(rxBuf[1]<<8), rxBuf[2]|(rxBuf[3]<<8), rxBuf[4]|(rxBuf[5]<<8)); // LSB first
+				xprintf("LSM303 ACC x,y,z: %d, %d, %d\n\n",rxBuf[1]|(rxBuf[0]<<8), rxBuf[3]|(rxBuf[2]<<8), rxBuf[5]|(rxBuf[4]<<8));// MSB first
+			}
+#endif
+
+#if TSL2561_TEST
+			// ILUM
+			memset(rxBuf,0,sizeof(rxBuf));
+			memset(txBuf,0,sizeof(txBuf));
+
+//			txBuf[0] = TSL2561_ON;
+//			err[0] = i2c1.write(TSL2561_ADDR, txBuf, 1);
+
+			txBuf[0] = TSL2561_COMMAND_BIT | TSL2561_WORD_BIT | TSL2561_REGISTER_CHAN1_LOW;
+
+			//err[0] = i2c1.writeRead(TSL2561_ADDR,txBuf,1,rxBuf,1);
+			err[1] = i2c1.writeRead(TSL2561_ADDR,txBuf,1,rxBuf,2);
+//			err[1] = i2c1.write(TSL2561_ADDR,txxBuf,2);
+			if (printError("TSL2561 ", err, 2) > 0) {
+				xprintf("Init I2C and all slaves ...\n\n");
+				init(); // init i2c1/i2c2 and all slaves
+			} else {
+				xprintf("TSL2561 LOW: %d, HIGH: %d",rxBuf[0], rxBuf[1]);
+			}
+#endif
+
+			// MAG
+#if LSM303_MAG_TEST
+			memset(rxBuf, 0, sizeof(rxBuf));
+			memset(txBuf, 0, sizeof(txBuf));
+			txBuf[0] = 0x03; // start reading with x-high register, read multiple register
+			err[0] = i2c1.writeRead(LSM303DLH_MAG_ADDR, txBuf, 1, rxBuf, 6);
+			if (printError("LSM303 MAG", err, 1) > 0) {
+				xprintf("Init I2C and all slaves ...\n\n");
+				init(); // init i2c1/i2c2 and all slaves
+			} else {
+				xprintf("LSM303 MAG x,y,z: %d, %d, %d\n\n",
+						rxBuf[1] | rxBuf[0] << 8, rxBuf[3] | rxBuf[2] << 8,
+						rxBuf[5] | rxBuf[4] << 8); // MSB first
+			}
+#endif
 
 
 //			xprintf("Hello World");

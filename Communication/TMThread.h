@@ -27,6 +27,6 @@ public:
 	void run();
 };
 
-TMThread myTM;
+
 
 #endif /* COMMUNICATION_TMTHREAD_H_ */

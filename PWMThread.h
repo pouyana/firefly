@@ -13,11 +13,12 @@
 #include "hal/hal_pwm.h"
 #include <cmath>
 
-HAL_PWM myPWM(PWM_IDX12);
-HAL_GPIO mySignA(GPIO_036);
-HAL_GPIO mySignB(GPIO_017);
 
-class PWMThread: public RODOS::Thread {
+
+
+
+
+class PWMThread: public RODOS::Thread, public RODOS::SubscriberReceiver<float> {
 private:
 	uint64_t sample = 0;;
 	float duty = 0;
@@ -30,14 +31,15 @@ private:
 
 
 public:
-	PWMThread(const char* name, HAL_PWM* pwm, uint64_t sample, HAL_GPIO* signA, HAL_GPIO* signB);
+	PWMThread(const char* name, HAL_PWM* pwm, uint64_t sample, HAL_GPIO* signA, HAL_GPIO* signB, Topic<float>* topic);
 	~PWMThread();
 
 	void init();
 	void run();
+	void put(long &data);
 
 };
 
-//PWMThread testPWM("testPWM", &myPWM, 5*SECONDS, &mySignA, &mySignB);
+
 
 #endif /* PWMTHREAD_H_ */

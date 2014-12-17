@@ -10,13 +10,18 @@
 
 
 enum CommandWord {
-	SWITCH_MODE = 0x0F,
-	TAKE_PIC 	= 0x10,
-	SET_THETA	= 0x11,
-	SET_OMEGA	= 0x12,
+
+	EMPTY		= 0x00,
+	SWITCH_MODE = 0x01,
+	TAKE_PIC 	= 0x02,
+	SET_THETA	= 0x03,
+	SET_OMEGA	= 0x04,
+
+	SET_MOTOR	= 0x05,
+	DEPLOY		= 0x06
 
 
-	EMPTY		= 0x00
+
 };
 
 
