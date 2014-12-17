@@ -96,11 +96,11 @@ protected:
 
 public:
 	static uint8_t highByte(uint16_t value) {
-		return (uint8_t) value >> 8;
+		return (uint8_t) (value >> 8);
 	}
 
 	static uint8_t lowByte(uint16_t value) {
-		return (uint8_t) (value && 0x00FF);
+		return (uint8_t) value;
 	}
 
 protected:

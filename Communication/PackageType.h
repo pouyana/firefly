@@ -10,8 +10,8 @@
 
 enum PackageType {
 	TC_PACKAGE = 0x00,
-	TM_PACKAGE = 0xFF,
-	VIDEO_PACKAGE = 0xF0
+	TM_PACKAGE = 0x01,
+	VIDEO_PACKAGE = 0x02
 
 };
 

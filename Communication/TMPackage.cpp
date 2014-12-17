@@ -963,10 +963,34 @@ TMPackage::TMPackage(SoftwareMode mode, CommandWord echoCmd, float echoParam,
 		float thetaFire2, float thetaFire3, float thetaFire4, float thetaFire5,
 		float timeFire1, float timeFire2, float timeFire3, float timeFire4,
 		float timeFire5, float tempFire1, float tempFire2, float tempFire3,
-		float tempFire4, float tempFire5, float thetaSun) : DataPackage(TM_PACKAGE_SIZE, TM_PACKAGE){
+		float tempFire4, float tempFire5, float thetaSun) :
+		DataPackage(TM_PACKAGE_SIZE, TM_PACKAGE) {
 
-	this->mode = mode;	this->echoCmd = echoCmd;	this->echoParam = echoParam;	this->time = time;	this->omegaX = omegaX;	this->omegaY = omegaY;	this->omegaZ = omegaZ;	this->accX = accX;
-	this->accY = accY;	this->accZ = accZ;	this->roll = roll;	this->pitch = pitch;	this->yaw = yaw;	this->quat1 = quat1;	this->quat2 = quat2;	this->quat3 = quat3;	this->quat4 = quat4;	this->vBat1 = vBat1;	this->vBat2 = vBat2;	this->vBat3 = vBat3;	this->vSolar1 = vSolar1;	this->vSolar2 = vSolar2;	this->motor = motor;	this->dep = dep;	this->chrg = chrg;
+	this->mode = mode;
+	this->echoCmd = echoCmd;
+	this->echoParam = echoParam;
+	this->time = time;
+	this->omegaX = omegaX;
+	this->omegaY = omegaY;
+	this->omegaZ = omegaZ;
+	this->accX = accX;
+	this->accY = accY;
+	this->accZ = accZ;
+	this->roll = roll;
+	this->pitch = pitch;
+	this->yaw = yaw;
+	this->quat1 = quat1;
+	this->quat2 = quat2;
+	this->quat3 = quat3;
+	this->quat4 = quat4;
+	this->vBat1 = vBat1;
+	this->vBat2 = vBat2;
+	this->vBat3 = vBat3;
+	this->vSolar1 = vSolar1;
+	this->vSolar2 = vSolar2;
+	this->motor = motor;
+	this->dep = dep;
+	this->chrg = chrg;
 	this->errorYaw = errorYaw;
 	this->errorOmegaZ = errorOmegaZ;
 	this->thetaFire1 = thetaFire1;
@@ -994,6 +1018,7 @@ void TMPackage::build() {
 
 	validRaw = true;
 
+	encodeType(sync);
 	encodeMode(mode);
 	encodeEchoCmd(echoCmd);
 	encodeEchoParam(echoParam);
@@ -1039,11 +1064,10 @@ void TMPackage::build() {
 	encodeThetaSun(thetaSun);
 	encodeStop(stop);
 
-
 }
 
 uint8_t* TMPackage::getRaw() {
-	if(!validRaw) {
+	if (!validRaw) {
 		build();
 	}
 	return rawData;

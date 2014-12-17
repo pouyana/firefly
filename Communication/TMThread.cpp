@@ -9,6 +9,10 @@
 #include "TMThread.h"
 #include "semaphore.h"
 
+//Debug
+#include "TMPackage.h"
+#include "../SoftwareMode.h"
+
 Semaphore testSemaphore;
 SimpleRing<int> myBuffer(20, &testSemaphore);
 HAL_UART myBlue(UART_IDX2);
@@ -52,17 +56,27 @@ void TMThread::run() {
 char* buffer = "Hello World";
 int status = 0;
 
-blue->write(buffer, 1);
+//uint16_t tmp = 0x0F03;
 
-while(1) {
+//blue->write(buffer, 1);
+TMPackage testPackage;
 
-		status = blue->write(buffer, 11);
-		if(status != 11) {
+//buffer[0] = DataPackage::lowByte(tmp);
+//buffer[1] = DataPackage::highByte(tmp);
+//buffer[2] = '#';
+
+buffer = (char*) testPackage.getRaw();
+
+//while(1) {
+
+		status = blue->write(buffer, 94);
+		//blue->write(, 1);
+		if(status != 94) {
 			blue->suspendUntilWriteFinished(NOW()+1*SECONDS);
 		}
 
 
-}
+//}
 
 
 }
